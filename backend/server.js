@@ -12,11 +12,14 @@ const auth = require('./middleware/auth');
 
 const app = express();
 
-// MIDDLEWARE
+// ================= MIDDLEWARE =================
 app.use(express.json());
-app.use(cors());
 
-// DB CONNECT
+app.use(cors({
+  origin: "*"
+}));
+
+// ================= DB CONNECT =================
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
@@ -27,16 +30,13 @@ mongoose.connect(process.env.MONGO_URI)
 app.post('/api/register', async (req, res) => {
   const { name, email, password } = req.body;
 
-  // validation
   if (!name || !email || !password) {
     return res.status(400).send("All fields are required");
   }
 
-  // check existing
   const userExist = await User.findOne({ email });
   if (userExist) return res.send("User already exists");
 
-  // hash password
   const hashed = await bcrypt.hash(password, 10);
 
   const user = new User({ name, email, password: hashed });
@@ -49,10 +49,10 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
 
- if (!user) return res.status(400).send("Invalid credentials");
+  if (!user) return res.status(400).send("Invalid credentials");
 
   const isMatch = await bcrypt.compare(req.body.password, user.password);
- if (!isMatch) return res.status(400).send("Invalid credentials");
+  if (!isMatch) return res.status(400).send("Invalid credentials");
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
@@ -78,7 +78,7 @@ app.get('/api/items', async (req, res) => {
   res.json(items);
 });
 
-
+// SEARCH ITEMS (IMPORTANT ORDER)
 app.get('/api/items/search', async (req, res) => {
   const items = await Item.find({
     itemName: { $regex: req.query.name, $options: "i" }
@@ -107,4 +107,6 @@ app.delete('/api/items/:id', auth, async (req, res) => {
 
 // ================= START SERVER =================
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
