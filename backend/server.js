@@ -27,6 +27,11 @@ mongoose.connect(process.env.MONGO_URI)
 // ================= AUTH =================
 
 // REGISTER
+
+app.get('/', (req, res) => {
+  res.send("Backend is running ");
+});
+
 app.post('/api/register', async (req, res) => {
   const { name, email, password } = req.body;
 
