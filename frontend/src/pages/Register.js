@@ -10,7 +10,7 @@ function Register() {
 
   const handleRegister = async () => {
     try {
-      await axios.post("http://localhost:5000/api/register", data);
+      await axios.post("https://lost-found-item-management-system-4jn3.onrender.com/api/register", data);
       alert("Registered Successfully");
       window.location.href = "/login";
     } catch (err) {

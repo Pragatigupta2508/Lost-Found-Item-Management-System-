@@ -26,7 +26,7 @@ function Dashboard() {
   
   const fetchItems = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/items");
+      const res = await axios.get("https://lost-found-item-management-system-4jn3.onrender.com/api/items");
       setItems(res.data);
     } catch (err) {
       console.log(err);
@@ -52,7 +52,7 @@ function Dashboard() {
         return;
       }
 
-      await axios.post("http://localhost:5000/api/items", data, {
+      await axios.post("https://lost-found-item-management-system-4jn3.onrender.com/api/items", data, {
         headers: { Authorization: token }
       });
 
@@ -76,7 +76,7 @@ function Dashboard() {
 
   
   const deleteItem = async (id) => {
-    await axios.delete(`http://localhost:5000/api/items/${id}`, {
+    await axios.delete(`https://lost-found-item-management-system-4jn3.onrender.com/api/items/${id}`, {
       headers: { Authorization: token }
     });
     fetchItems();
@@ -85,7 +85,7 @@ function Dashboard() {
  
   const updateItem = async (id) => {
     await axios.put(
-      `http://localhost:5000/api/items/${id}`,
+      `https://lost-found-item-management-system-4jn3.onrender.com/api/items/${id}`,
       { location: "Updated Location" },
       { headers: { Authorization: token } }
     );
@@ -95,7 +95,7 @@ function Dashboard() {
  
   const searchItems = async () => {
     const res = await axios.get(
-      `http://localhost:5000/api/items/search?name=${search}`
+      `https://lost-found-item-management-system-4jn3.onrender.com/api/items/search?name=${search}`
     );
     setItems(res.data);
   };
